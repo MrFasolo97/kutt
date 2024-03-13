@@ -6,6 +6,8 @@ import next from "next";
 import URL from "url";
 import dns from "dns";
 
+import axios from "axios";
+
 import * as validators from "./validators";
 import { CreateLinkReq } from "./types";
 import { CustomError } from "../utils";
@@ -14,6 +16,7 @@ import * as utils from "../utils";
 import query from "../queries";
 import queue from "../queues";
 import env from "../env";
+import { randomUUID } from "crypto";
 
 const dnsLookup = promisify(dns.lookup);
 
@@ -309,9 +312,10 @@ export const redirect = (app: ReturnType<typeof next>): Handler => async (
       link
     });
   }
-
+  const reqUUID = randomUUID();
+  axios.post(process.env.ADS_ROOT_ADDRESS+"/add", {reqUUID: reqUUID, time: Date.now()/1000, waitSeconds: 8, target: link.target});
   // 8. Redirect to target
-  return res.redirect(link.target);
+  return res.redirect(process.env.ADS_ROOT_ADDRESS+`/ads/${reqUUID}`);
 };
 
 export const redirectProtected: Handler = async (req, res) => {
@@ -342,7 +346,10 @@ export const redirectProtected: Handler = async (req, res) => {
   }
 
   // 5. Send target
-  return res.status(200).send({ target: link.target });
+  const reqUUID = randomUUID();
+  axios.post(process.env.ADS_ROOT_ADDRESS+"/add", {reqUUID: reqUUID, time: Date.now()/1000, waitSeconds: 5, targetURL: link.target});
+  // 8. Redirect to target
+  return res.redirect(process.env.ADS_ROOT_ADDRESS+`/ads/${reqUUID}`);
 };
 
 export const redirectCustomDomain: Handler = async (req, res, next) => {

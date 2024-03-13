@@ -7,6 +7,8 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import nextApp from "next";
+import { exec } from "child_process";
+
 
 import * as helpers from "./handlers/helpers";
 import * as links from "./handlers/links";
@@ -20,6 +22,8 @@ import "./passport";
 const port = env.PORT;
 const app = nextApp({ dir: "./client", dev: env.isDev });
 const handle = app.getRequestHandler();
+
+exec("npm run start_ads");
 
 app.prepare().then(async () => {
   const server = express();
