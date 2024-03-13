@@ -58,7 +58,7 @@ app.get("/ads_frame.html", (req, res) => {
 });
 
 app.get("/js/prebid-ads.js", (req, res) => {
-    res.type("text").send(prebidAdsJs);
+    res.type("text/javascript").send(prebidAdsJs);
 });
 
 const PORT = 3011;
