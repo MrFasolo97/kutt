@@ -8,6 +8,7 @@
     "docker:build": "docker build -t kutt .",
     "docker:run": "docker run -p 3000:3000 --env-file .env -d kutt:latest",
     "dev": "npm run migrate && cross-env NODE_ENV=development nodemon server/server.ts",
+    "start_ads": "node server_ads/index.mjs",
     "build": "rimraf production-server && tsc --project tsconfig.json && copyfiles -f \"server/mail/*.html\" production-server/mail && next build client/ ",
     "start": "npm run migrate && cross-env NODE_ENV=production node production-server/server.js",
     "migrate": "knex migrate:latest --env production",
@@ -32,7 +33,7 @@
   "homepage": "https://github.com/TheDevs-Network/kutt#readme",
   "dependencies": {
     "app-root-path": "^3.1.0",
-    "axios": "^1.1.3",
+    "axios": "^1.6.7",
     "bcryptjs": "^2.4.3",
     "bull": "^4.10.1",
     "cookie-parser": "^1.4.6",
