@@ -2,7 +2,11 @@ import { Knex } from "knex";
 import env from "../env";
 
 export async function up(knex: Knex): Promise<any> {
-  const domains = await knex("domains").select("address");
+  const tmpDomains = await knex("domains").select("address");
+  const domains = [];
+  for (const domain in tmpDomains) {
+    domains.push(tmpDomains[domain].address);
+  }
   const altDomains = [];
   if(env.NEXT_PUBLIC_ALT_DOMAINS.includes(",")) {
     altDomains.push(env.NEXT_PUBLIC_ALT_DOMAINS.split(","));
@@ -11,7 +15,7 @@ export async function up(knex: Knex): Promise<any> {
   }
   if (altDomains.length > 0) {
     for (const altDomain in altDomains) {
-        if (!domains.includes(altDomain)) {
+        if (!domains.includes(altDomains[altDomain])) {
             await knex("domains").insert({address: altDomains[altDomain]});
         }
     }
