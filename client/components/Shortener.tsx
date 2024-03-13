@@ -82,7 +82,24 @@ const Shortener = () => {
         }
       }
     );
-
+    const simpleDomainList = [];
+    for (const domain in domains) {
+      simpleDomainList.push(domains[domain].address);
+    }
+  if(process.env.NEXT_PUBLIC_ALT_DOMAINS.length > 0) {
+    const tmpAltDomains = process.env.NEXT_PUBLIC_ALT_DOMAINS.split(",");
+    if(process.env.NEXT_PUBLIC_ALT_DOMAINS.includes(",")) {
+      for (const domain in tmpAltDomains) {
+        if(!simpleDomainList.includes(tmpAltDomains[domain])) {
+          domains.push({address: tmpAltDomains[domain], id: tmpAltDomains[domain], banned: false, updated_at: "", created_at: ""});
+        }
+      }
+    } else {
+      if(!simpleDomainList.includes(process.env.NEXT_PUBLIC_ALT_DOMAINS)) {
+        domains.push({address: process.env.NEXT_PUBLIC_ALT_DOMAINS, id: process.env.NEXT_PUBLIC_ALT_DOMAINS, banned: false, updated_at: "", created_at: ""});
+      }
+    }
+  }
   const submitLink = async (reCaptchaToken?: string) => {
     try {
       const link = await submit({ ...formState.values, reCaptchaToken });

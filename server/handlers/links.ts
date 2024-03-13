@@ -54,10 +54,13 @@ export const create: Handler = async (req: CreateLinkReq, res) => {
     domain,
     expire_in
   } = req.body;
-  const domain_id = domain ? domain.id : null;
+  let domain_id = null;
+
+  if(domain && domain_id == null) {
+    domain_id = (await query.domain.find({"address": domain})).id;
+  }
 
   const targetDomain = utils.removeWww(URL.parse(target).hostname);
-
   const queries = await Promise.all([
     validators.cooldown(req.user),
     validators.malware(req.user, target),
@@ -107,7 +110,7 @@ export const create: Handler = async (req: CreateLinkReq, res) => {
 
   return res
     .status(201)
-    .send(utils.sanitize.link({ ...link, domain: domain?.address }));
+    .send(utils.sanitize.link({ ...link, domain: domain }));
 };
 
 export const edit: Handler = async (req, res) => {

@@ -119,7 +119,7 @@ export const createLink = [
     .customSanitizer(value => value.toLowerCase())
     .customSanitizer(value => removeWww(URL.parse(value).hostname || value))
     .custom(async (address, { req }) => {
-      if (address === env.DEFAULT_DOMAIN) {
+      if (address === env.DEFAULT_DOMAIN || process.env.NEXT_PUBLIC_ALT_DOMAINS.split(",").includes(address)) {
         req.body.domain = null;
         return;
       }

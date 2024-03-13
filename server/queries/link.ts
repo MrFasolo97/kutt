@@ -99,7 +99,7 @@ export const find = async (match: Partial<Link>): Promise<Link> => {
     const cachedLink = await redisClient.get(key);
     if (cachedLink) return JSON.parse(cachedLink);
   }
-
+  delete match.domain_id;
   const link = await knex<Link>("links")
     .select(...selectable)
     .where(normalizeMatch(match))
