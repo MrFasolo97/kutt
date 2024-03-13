@@ -14,7 +14,7 @@ const Features = () => (
     backgroundColor={Colors.FeaturesBg}
   >
     <H3 fontSize={[26, 28]} mb={72} light>
-      Kutting edge features.
+      Cutting edge features.
     </H3>
     <Flex
       width={1200}
